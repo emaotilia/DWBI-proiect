@@ -1,0 +1,132 @@
+<div class="space-y-6">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Rapoarte Grafice Dinamice</h2>
+    <p class="text-gray-600 mb-6">
+      Rapoarte grafice dinamice asociate cerințelor definite în etapele anterioare.
+    </p>
+
+    <!-- Key Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-blue-50 p-4 rounded-lg">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-blue-600">Total Vânzări</p>
+            <p class="text-2xl font-bold text-blue-900">{{ getTotalSales() | number }} RON</p>
+          </div>
+          <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="bg-green-50 p-4 rounded-lg">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-green-600">Vizitatori Totali</p>
+            <p class="text-2xl font-bold text-green-900">{{ getTotalVisitors() | number }}</p>
+          </div>
+          <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="bg-purple-50 p-4 rounded-lg">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-purple-600">Evenimente Active</p>
+            <p class="text-2xl font-bold text-purple-900">{{ getTotalEvents() }}</p>
+          </div>
+          <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="bg-orange-50 p-4 rounded-lg">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-orange-600">Grădini Zoo</p>
+            <p class="text-2xl font-bold text-orange-900">{{ getZooCount() }}</p>
+          </div>
+          <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading" class="flex justify-center items-center py-20">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <span class="ml-3 text-gray-600">Se încarcă datele din baza de date...</span>
+    </div>
+
+    <!-- Charts -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Line Chart - Ticket Sales -->
+      <div class="bg-white border rounded-lg p-4">
+        <h3 class="text-lg font-semibold mb-4">Vânzări Bilete pe Luni</h3>
+        <div class="h-80">
+          <canvas 
+            baseChart
+            [type]="lineChartType"
+            [data]="lineChartData"
+            [options]="lineChartOptions">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Bar Chart - Zoo Performance -->
+      <div class="bg-white border rounded-lg p-4">
+        <h3 class="text-lg font-semibold mb-4">Performanță pe Grădini Zoo</h3>
+        <div class="h-80">
+          <canvas 
+            baseChart
+            [type]="barChartType"
+            [data]="barChartData"
+            [options]="barChartOptions">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Pie Chart - Event Types -->
+      <div class="bg-white border rounded-lg p-4">
+        <h3 class="text-lg font-semibold mb-4">Distribuție Tipuri Evenimente</h3>
+        <div class="h-80">
+          <canvas 
+            baseChart
+            [type]="pieChartType"
+            [data]="pieChartData"
+            [options]="pieChartOptions">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Monthly Events Chart -->
+      <div class="bg-white border rounded-lg p-4">
+        <h3 class="text-lg font-semibold mb-4">Evenimente Lunare</h3>
+        <div class="h-80">
+          <canvas 
+            baseChart
+            [type]="barChartType"
+            [data]="eventBarChartData"
+            [options]="barChartOptions">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Refresh button -->
+    <div class="mt-6 text-center">
+      <button
+        (click)="refreshData()"
+        [disabled]="isLoading"
+        class="bg-purple-500 text-white px-6 py-2 rounded-lg hover:bg-purple-600 disabled:bg-gray-400 flex items-center gap-2 mx-auto transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        <span *ngIf="!isLoading">Reîmprospătare Date</span>
+        <span *ngIf="isLoading">Se actualizează...</span>
+      </button>
+    </div>
+  </div>
+</div>

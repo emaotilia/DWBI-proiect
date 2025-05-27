@@ -1,0 +1,69 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <h1 class="text-2xl font-bold text-gray-900">🦁 Zoo Management System</h1>
+        </div>
+        <div class="text-sm text-gray-500">
+          Academic Project - Big Data & Analytics
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="bg-blue-600 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex space-x-8">
+        <button 
+          (click)="setActiveModule('oltp')"
+          [class]="'px-4 py-4 text-sm font-medium transition-colors ' + 
+                   (activeModule === 'oltp' ? 'text-white bg-blue-700' : 'text-blue-100 hover:text-white hover:bg-blue-500')">
+          📊 OLTP Module
+        </button>
+        <button 
+          (click)="setActiveModule('warehouse')"
+          [class]="'px-4 py-4 text-sm font-medium transition-colors ' + 
+                   (activeModule === 'warehouse' ? 'text-white bg-blue-700' : 'text-blue-100 hover:text-white hover:bg-blue-500')">
+          🏭 Data Warehouse
+        </button>
+        <button 
+          (click)="setActiveModule('reporting')"
+          [class]="'px-4 py-4 text-sm font-medium transition-colors ' + 
+                   (activeModule === 'reporting' ? 'text-white bg-blue-700' : 'text-blue-100 hover:text-white hover:bg-blue-500')">
+          📈 Reporting Module
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Module Description -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8 border-l-4 border-blue-500">
+      <h2 class="text-xl font-semibold mb-2">{{ getModuleTitle() }}</h2>
+      <p class="text-gray-600">{{ getModuleDescription() }}</p>
+    </div>
+
+    <!-- Module Content -->
+    <div [ngSwitch]="activeModule">
+      <app-oltp-module *ngSwitchCase="'oltp'"></app-oltp-module>
+      <app-data-warehouse *ngSwitchCase="'warehouse'"></app-data-warehouse>
+      <app-reporting-module *ngSwitchCase="'reporting'"></app-reporting-module>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="text-center">
+        <p class="text-sm">Zoo Management System - Frontend Implementation</p>
+        <p class="text-xs text-gray-400 mt-2">Built with Angular 19, Tailwind CSS, and Chart.js</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<router-outlet />

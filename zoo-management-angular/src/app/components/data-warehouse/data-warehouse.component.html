@@ -1,0 +1,195 @@
+<div class="space-y-6">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Modulul Data Warehouse</h2>
+    <p class="text-gray-600 mb-6">
+      Propagarea operațiilor efectuate asupra datelor din baza de date OLTP în baza de date DW.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <button
+        (click)="handleDWOperation('Extract Transform Load')"
+        class="bg-green-500 text-white p-4 rounded-lg hover:bg-green-600 flex items-center justify-center gap-2 transition-colors"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        ETL Process
+      </button>
+      <button
+        (click)="handleDWOperation('Data Validation')"
+        class="bg-blue-500 text-white p-4 rounded-lg hover:bg-blue-600 flex items-center justify-center gap-2 transition-colors"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Validare Date
+      </button>
+      <button
+        (click)="handleDWOperation('Sync Modifications')"
+        class="bg-purple-500 text-white p-4 rounded-lg hover:bg-purple-600 flex items-center justify-center gap-2 transition-colors"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        </svg>
+        Sincronizare
+      </button>
+      <button
+        (click)="loadAnalyticsData()"
+        class="bg-indigo-500 text-white p-4 rounded-lg hover:bg-indigo-600 flex items-center justify-center gap-2 transition-colors"
+        [disabled]="isLoadingAnalytics"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" 
+             [class.animate-spin]="isLoadingAnalytics">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        {{ isLoadingAnalytics ? 'Loading...' : 'Refresh Analytics' }}
+      </button>
+    </div>
+
+    <!-- Analytics Dashboard -->
+    <div *ngIf="analyticsData" class="bg-gray-50 rounded-lg p-6 mb-6">
+      <h3 class="text-lg font-semibold mb-4">Data Warehouse Analytics</h3>
+      
+      <!-- ETL Summary -->
+      <div class="bg-white p-4 rounded-lg mb-4">
+        <h4 class="font-medium mb-2">ETL Summary</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div>
+            <span class="text-gray-600">Total Records:</span>
+            <span class="font-semibold ml-2">{{ analyticsData.etlSummary.totalRecords | number }}</span>
+          </div>
+          <div>
+            <span class="text-gray-600">Tables Processed:</span>
+            <span class="font-semibold ml-2">{{ analyticsData.etlSummary.tablesProcessed }}</span>
+          </div>
+          <div>
+            <span class="text-gray-600">Last Update:</span>
+            <span class="font-semibold ml-2">{{ analyticsData.etlSummary.lastUpdate || 'Never' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zoo Statistics -->
+      <div class="bg-white p-4 rounded-lg mb-4">
+        <h4 class="font-medium mb-3">Zoo Performance Overview</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b">
+                <th class="text-left py-2">Zoo</th>
+                <th class="text-left py-2">Employees</th>
+                <th class="text-left py-2">Animals</th>
+                <th class="text-left py-2">Area (ha)</th>
+                <th class="text-left py-2">Revenue</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let zoo of analyticsData.zooStatistics" class="border-b">
+                <td class="py-2">{{ zoo.nume }}</td>
+                <td class="py-2">{{ zoo.employee_count }}</td>
+                <td class="py-2">{{ zoo.animal_count }}</td>
+                <td class="py-2">{{ zoo.suprafata }}</td>
+                <td class="py-2">{{ zoo.total_revenue | currency:'RON':'symbol':'1.0-0' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Revenue by Month -->
+      <div class="bg-white p-4 rounded-lg mb-4">
+        <h4 class="font-medium mb-3">Monthly Revenue Trends</h4>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4 text-sm">
+          <div *ngFor="let month of analyticsData.revenueData" class="text-center">
+            <div class="text-gray-600">{{ month.month }}</div>
+            <div class="font-semibold text-green-600">{{ month.revenue | currency:'RON':'symbol':'1.0-0' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visitor Demographics -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-white p-4 rounded-lg">
+          <h4 class="font-medium mb-3">Visitor Demographics</h4>
+          <div class="space-y-2">
+            <div *ngFor="let demo of analyticsData.visitorDemographics" class="flex justify-between">
+              <span class="text-gray-600">{{ demo.age_group }}:</span>
+              <span class="font-semibold">{{ demo.count }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-lg">
+          <h4 class="font-medium mb-3">Employee Distribution</h4>
+          <div class="space-y-2">
+            <div *ngFor="let emp of analyticsData.employeeDistribution" class="flex justify-between">
+              <span class="text-gray-600">{{ emp.functie }}:</span>
+              <span class="font-semibold">{{ emp.count }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Operations Log -->
+    <div class="bg-gray-50 rounded-lg p-4">
+      <h3 class="font-semibold mb-4">Istoric Operații DW</h3>
+      <div class="space-y-3">
+        <div *ngIf="dwOperations.length === 0" class="text-gray-500 text-center py-8">
+          Nu există operații înregistrate. Inițiați o operație folosind butoanele de mai sus.
+        </div>
+        <div *ngFor="let op of dwOperations" class="bg-white p-4 rounded border">
+          <div class="flex justify-between items-center">
+            <div>
+              <h4 class="font-medium">{{ op.operation }}</h4>
+              <p class="text-sm text-gray-500">{{ op.timestamp }}</p>
+              <p *ngIf="op.details" class="text-xs text-gray-400 mt-1">{{ op.details }}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-gray-600">
+                {{ op.records }} înregistrări
+              </span>
+              <span 
+                class="px-2 py-1 rounded text-xs flex items-center gap-1"
+                [ngClass]="{
+                  'bg-green-100 text-green-800': op.status === 'Completed',
+                  'bg-yellow-100 text-yellow-800': op.status === 'In Progress',
+                  'bg-red-100 text-red-800': op.status === 'Error'
+                }"
+              >
+                <svg 
+                  *ngIf="op.status === 'In Progress'" 
+                  class="w-3 h-3 animate-spin" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                <svg 
+                  *ngIf="op.status === 'Completed'" 
+                  class="w-3 h-3" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <svg 
+                  *ngIf="op.status === 'Error'" 
+                  class="w-3 h-3" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                {{ op.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
