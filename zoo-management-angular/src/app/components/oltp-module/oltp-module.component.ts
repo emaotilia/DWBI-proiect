@@ -120,7 +120,7 @@ export class OltpModuleComponent implements OnInit {
   getTableColumns(): string[] {
     switch (this.activeTable) {
       case 'zoo':
-        return ['ID', 'Nume', 'Locație', 'Suprafață', 'Număr Animale'];
+        return ['id', 'denumire', 'oras'];
       case 'angajat':
         return ['ID', 'Nume', 'Prenume', 'Poziție', 'Salariu', 'Data Angajării', 'Zoo ID'];
       case 'studiu':
@@ -165,11 +165,8 @@ export class OltpModuleComponent implements OnInit {
     switch (this.activeTable) {
       case 'zoo':
         return [
-          { key: 'nume', label: 'Nume', type: 'text' },
-          { key: 'locatie', label: 'Locație', type: 'text' },
-          { key: 'data_deschidere', label: 'Data Deschiderii', type: 'date' },
-          { key: 'suprafata', label: 'Suprafață (m²)', type: 'number' },
-          { key: 'nr_angajati', label: 'Număr Angajați', type: 'number' }
+          { key: 'denumire', label: 'denumire', type: 'text' },
+          { key: 'oras', label: 'oras', type: 'text' },
         ];
       case 'angajat':
         return [
@@ -302,7 +299,7 @@ export class OltpModuleComponent implements OnInit {
 
   saveItem(): void {
     const formData = this.getCurrentForm();
-    
+    debugger;
     if (this.editingId) {
       // Update existing item
       const updatedItem = { ...formData, id: this.editingId };
@@ -318,6 +315,7 @@ export class OltpModuleComponent implements OnInit {
 
   deleteItem(id: number): void {
     if (confirm('Sunteți sigur că doriți să ștergeți această înregistrare?')) {
+      debugger;
       this.deleteItemFromService(id);
     }
   }

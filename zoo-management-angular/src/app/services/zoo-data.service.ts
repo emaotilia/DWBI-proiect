@@ -6,11 +6,8 @@ import { map, tap, catchError } from 'rxjs/operators';
 // Core entities
 export interface Zoo {
   id: number;
-  nume: string;
-  locatie: string;
-  data_deschidere?: string;
-  suprafata: number;
-  nr_angajati: number;
+  denumire: string;
+  oras: string;
 }
 
 export interface Angajat {
@@ -180,6 +177,14 @@ export class ZooDataService {
   hranire$ = this.hranireSubject.asObservable();
   etlLogs$ = this.etlLogsSubject.asObservable();
 
+  private transformZoo(zoo: any): Zoo {
+    return {
+      id: zoo.id_zoo,
+      denumire: zoo.denumire,
+      oras: zoo.oras
+    };
+  }
+
   constructor(private http: HttpClient) {
     this.loadAllData();
   }
@@ -201,16 +206,17 @@ export class ZooDataService {
 
   // HTTP service methods to load data from backend
   private loadZoos(): void {
-    this.http.get<Zoo[]>(`${this.API_BASE_URL}/zoo`)
+    this.http.get<any[]>(`${this.API_BASE_URL}/zoo`)
       .pipe(
+        map(data => data.map(zoo => this.transformZoo(zoo))),
         catchError(error => {
           console.error('Error loading zoos:', error);
           return of([]);
         })
       )
-      .subscribe(data => this.zoosSubject.next(data));
+      .subscribe((mappedZoos: Zoo[]) => this.zoosSubject.next(mappedZoos));
   }
-
+  
   private loadAngajati(): void {
     this.http.get<Angajat[]>(`${this.API_BASE_URL}/angajat`)
       .pipe(
@@ -322,23 +328,30 @@ export class ZooDataService {
   }
 
   // Zoo CRUD operations - with real backend integration
-  addZoo(zoo: Omit<Zoo, 'id'>): void {
-    this.http.post(`${this.API_BASE_URL}/zoo`, zoo)
+  addZoo(zoo: Zoo): void {
+    const backendZoo = {
+      id_zoo: zoo.id,
+      denumire: zoo.denumire,
+      oras: zoo.oras
+    };
+  
+    this.http.post(`${this.API_BASE_URL}/zoo`, backendZoo)
       .pipe(
         catchError(error => {
           console.error('Error adding zoo:', error);
-          this.addETLLog('zoo', 'INSERT', 0, 'error', `Failed to add zoo "${zoo.nume}": ${error.message}`);
+          this.addETLLog('zoo', 'INSERT', 0, 'error', `Failed to add zoo "${zoo.denumire}": ${error.message}`);
           return of(null);
         })
       )
       .subscribe(response => {
         if (response) {
-          this.addETLLog('zoo', 'INSERT', 1, 'success', `Zoo "${zoo.nume}" added successfully`);
-          // Reload data from backend to get the new record with correct ID
+          this.addETLLog('zoo', 'INSERT', 1, 'success', `Zoo "${zoo.denumire}" added successfully`);
           this.loadZoos();
         }
       });
   }
+  
+  
 
   updateZoo(id: number, zoo: Partial<Zoo>): void {
     this.http.put(`${this.API_BASE_URL}/zoo/${id}`, zoo)

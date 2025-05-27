@@ -69,21 +69,17 @@
               <!-- Zoo table columns -->
               <ng-container *ngSwitchCase="'zoo'">
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.id }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.nume }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.locatie }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.suprafata | number }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.nr_angajati }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.denumire }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.oras }}</td>
               </ng-container>
 
               <!-- Angajat table columns -->
               <ng-container *ngSwitchCase="'angajat'">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.id_angajat }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.id }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.nume }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.prenume }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.functie }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.salariu | currency:'RON':'symbol':'1.0-0' }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.data_angajare | date:'dd/MM/yyyy' }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.zoo_id }}</td>
               </ng-container>
 
               <!-- Studiu table columns -->
@@ -253,51 +249,28 @@
         <!-- Debug: Show form fields count -->
         <!-- Basic working form for Zoo -->
         <div *ngIf="activeTable === 'zoo'" class="space-y-4">
+          
           <div class="form-group">
-            <label for="nume" class="block text-sm font-medium text-gray-700 mb-1">Nume</label>
+            <label for="denumire" class="block text-sm font-medium text-gray-700 mb-1">Denumire</label>
             <input
-              id="nume"
+            id="denumire"
+            type="text"
+            [(ngModel)]="zooForm.denumire"
+            name="denumire"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+            placeholder="Introduceți locația"
+            required>
+          </div>
+          
+          <div class="form-group">
+            <label for="oras" class="block text-sm font-medium text-gray-700 mb-1">Oras</label>
+            <input
+              id="oras"
               type="text"
-              [(ngModel)]="zooForm.nume"
-              name="nume"
+              [(ngModel)]="zooForm.oras"
+              name="oras"
               class="w-full border border-gray-300 rounded px-3 py-2"
               placeholder="Introduceți numele zoo-ului"
-              required>
-          </div>
-
-          <div class="form-group">
-            <label for="locatie" class="block text-sm font-medium text-gray-700 mb-1">Locație</label>
-            <input
-              id="locatie"
-              type="text"
-              [(ngModel)]="zooForm.locatie"
-              name="locatie"
-              class="w-full border border-gray-300 rounded px-3 py-2"
-              placeholder="Introduceți locația"
-              required>
-          </div>
-
-          <div class="form-group">
-            <label for="suprafata" class="block text-sm font-medium text-gray-700 mb-1">Suprafață (m²)</label>
-            <input
-              id="suprafata"
-              type="number"
-              [(ngModel)]="zooForm.suprafata"
-              name="suprafata"
-              class="w-full border border-gray-300 rounded px-3 py-2"
-              placeholder="Introduceți suprafața în metri pătrați"
-              required>
-          </div>
-
-          <div class="form-group">
-            <label for="nr_angajati" class="block text-sm font-medium text-gray-700 mb-1">Număr Angajați</label>
-            <input
-              id="nr_angajati"
-              type="number"
-              [(ngModel)]="zooForm.nr_angajati"
-              name="nr_angajati"
-              class="w-full border border-gray-300 rounded px-3 py-2"
-              placeholder="Introduceți numărul de angajați"
               required>
           </div>
         </div>
