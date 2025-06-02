@@ -101,11 +101,7 @@
               <ng-container *ngSwitchCase="'vizitator'">
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.id }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.nume }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.prenume }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.varsta }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.email }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.telefon }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.dataInregistrarii | date:'dd/MM/yyyy' }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.grup_varsta }}</td>
               </ng-container>
 
               <!-- TipBilet table columns -->
@@ -287,6 +283,19 @@
               [name]="field.key"
               class="w-full border border-gray-300 rounded px-3 py-2"
               required>
+
+              <select
+              *ngIf="field.type === 'select'"
+              [id]="field.key"
+              [(ngModel)]="getCurrentForm()[field.key]"
+              [name]="field.key"
+              class="w-full border border-gray-300 rounded px-3 py-2"
+              required>
+              <option value="" disabled selected hidden>Alegeți...</option>
+              <option *ngFor="let option of field.options" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
 
             <textarea
               *ngIf="field.type === 'textarea'"

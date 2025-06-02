@@ -126,9 +126,9 @@ export class OltpModuleComponent implements OnInit {
       case 'studiu':
         return ['ID', 'Nume'];
       case 'calificare':
-        return ['ID', 'Angajat ID', 'Studiu ID', 'Data Obținerii', 'Notă'];
+        return ['ID', 'Angajat ID', 'Studiu ID'];
       case 'vizitator':
-        return ['ID', 'Nume', 'Prenume', 'Vârstă', 'Email', 'Telefon', 'Data Înregistrării'];
+        return ['ID', 'Nume', 'Grup Varsta'];
       case 'tipBilet':
         return ['ID', 'Nume', 'Preț', 'Descriere', 'Discount'];
       case 'eveniment':
@@ -183,17 +183,22 @@ export class OltpModuleComponent implements OnInit {
         return [
           { key: 'angajatId', label: 'Angajat ID', type: 'number' },
           { key: 'studiuId', label: 'Studiu ID', type: 'number' },
-          { key: 'dataObtinerii', label: 'Data Obținerii', type: 'date' },
-          { key: 'nota', label: 'Notă', type: 'number' }
         ];
       case 'vizitator':
         return [
           { key: 'nume', label: 'Nume', type: 'text' },
-          { key: 'prenume', label: 'Prenume', type: 'text' },
-          { key: 'varsta', label: 'Vârstă', type: 'number' },
-          { key: 'email', label: 'Email', type: 'email' },
-          { key: 'telefon', label: 'Telefon', type: 'text' },
-          { key: 'dataInregistrarii', label: 'Data Înregistrării', type: 'date' }
+          {
+            key: 'grup_varsta',
+            label: 'Vârstă',
+            type: 'select',
+            options: [
+              { label: 'Adult', value: 'adult' },
+              { label: 'Copil', value: 'copil' },
+              { label: 'Student', value: 'student' },
+              { label: 'Elev', value: 'elev' },
+              { label: 'Senior', value: 'senior' }
+            ]
+          },
         ];
       case 'tipBilet':
         return [

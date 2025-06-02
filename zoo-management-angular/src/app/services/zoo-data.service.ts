@@ -27,17 +27,12 @@ export interface Calificare {
   id: number;
   angajatId: number;
   studiuId: number;
-  dataObtinerii: string;
-  nota?: number;
 }
 
 export interface Vizitator {
   id: number;
   nume: string;
-  prenume: string;
-  varsta: number;
-  email: string;
-  telefon: string;
+  grup_varsta: string;
 }
 
 export interface TipBilet {
@@ -197,6 +192,22 @@ private transformStudiu(studiu: any): Studiu {
   };
 }
 
+private transformCalificare(calificare: any): Calificare {
+  return {
+    id: calificare.id_calificare,
+    angajatId: calificare.id_angajat,
+    studiuId: calificare.id_studiu
+  }
+}
+
+private transformVizitator(vizitator: any): Vizitator {
+  return {
+    id: vizitator.id_vizitator,
+    nume: vizitator.nume,
+    grup_varsta: vizitator.grup_varsta,
+  }
+} 
+
   constructor(private http: HttpClient) {
     this.loadAllData();
   }
@@ -256,6 +267,7 @@ private transformStudiu(studiu: any): Studiu {
   private loadCalificari(): void {
     this.http.get<Calificare[]>(`${this.API_BASE_URL}/calificare`)
       .pipe(
+        map(data => data.map(calificare => this.transformCalificare(calificare))),
         catchError(error => {
           console.error('Error loading calificari:', error);
           return of([]);
@@ -267,6 +279,7 @@ private transformStudiu(studiu: any): Studiu {
   private loadVizitatori(): void {
     this.http.get<Vizitator[]>(`${this.API_BASE_URL}/vizitator`)
       .pipe(
+        map(data => data.map(vizitator => this.transformVizitator(vizitator))),
         catchError(error => {
           console.error('Error loading vizitatori:', error);
           return of([]);
@@ -649,7 +662,7 @@ private transformStudiu(studiu: any): Studiu {
     const newId = Math.max(...current.map(v => v.id)) + 1;
     const newVizitator = { ...vizitator, id: newId };
     this.vizitatoriSubject.next([...current, newVizitator]);
-    this.addETLLog('vizitator', 'INSERT', 1, 'success', `Visitor "${vizitator.nume} ${vizitator.prenume}" added successfully`);
+    this.addETLLog('vizitator', 'INSERT', 1, 'success', `Visitor "${vizitator.nume} " added successfully`);
   }
 
   updateVizitator(id: number, vizitator: Partial<Vizitator>): void {
