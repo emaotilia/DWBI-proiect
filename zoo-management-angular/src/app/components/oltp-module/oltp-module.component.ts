@@ -142,7 +142,7 @@ export class OltpModuleComponent implements OnInit {
       case 'specie':
         return ['ID', 'Denumire'];
       case 'animal':
-        return ['ID', 'Nume', 'Vârstă', 'Sex', 'Greutate', 'Data Aducerii', 'Specie ID', 'Tarc ID'];
+        return ['ID', 'Data Nastere', 'Specie ID', 'Tarc ID'];
       case 'mancare':
         return ['ID', 'Nume', 'Tip Mâncare', 'Calorii', 'Preț per Kg', 'Furnizor'];
       case 'seHranesteCu':
@@ -237,12 +237,9 @@ export class OltpModuleComponent implements OnInit {
         ];
       case 'animal':
         return [
-          { key: 'nume', label: 'Nume', type: 'text' },
-          { key: 'specie', label: 'Specie', type: 'text' },
-          { key: 'varsta', label: 'Vârstă', type: 'number' },
-          { key: 'greutate', label: 'Greutate (kg)', type: 'number' },
-          { key: 'data_sosire', label: 'Data Sosirii', type: 'date' },
-          { key: 'zoo_id', label: 'Zoo ID', type: 'number' }
+          { key: 'data_nastere', label: 'Data Nastere', type: 'date' },
+          { key: 'specie_id', label: 'Specie ID', type: 'number' },
+          { key: 'tarc_id', label: 'Tarc ID', type: 'number' },
         ];
       case 'mancare':
         return [

@@ -78,12 +78,9 @@ export interface Specie {
 
 export interface Animal {
   id: number;
-  nume: string;
-  specie: string;
-  varsta: number;
-  greutate: number;
-  data_sosire: string;
-  zoo_id: number;
+  data_nastere: string;
+  specie_id: number;
+  tarc_id: number;
 }
 
 export interface Mancare {
@@ -235,6 +232,15 @@ private transformSpecie(specie: any): Specie {
   }
 }
 
+private transformAnimal(animal: any): Animal {
+  return {
+    id: animal.id_animal,
+    data_nastere: animal.data_nasterii,
+    specie_id: animal.id_specie,
+    tarc_id: animal.id_tarc
+  }
+}
+
   constructor(private http: HttpClient) {
     this.loadAllData();
   }
@@ -380,6 +386,7 @@ private transformSpecie(specie: any): Specie {
   private loadAnimale(): void {
     this.http.get<Animal[]>(`${this.API_BASE_URL}/animal`)
       .pipe(
+        map(data => data.map(animal => this.transformAnimal(animal))),
         catchError(error => {
           console.error('Error loading animale:', error);
           return of([]);
@@ -900,7 +907,7 @@ private transformSpecie(specie: any): Specie {
     const newId = Math.max(...current.map(a => a.id)) + 1;
     const newAnimal = { ...animal, id: newId };
     this.animaleSubject.next([...current, newAnimal]);
-    this.addETLLog('animal', 'INSERT', 1, 'success', `Animal "${animal.nume}" added successfully`);
+    this.addETLLog('animal', 'INSERT', 1, 'success', `Animal  added successfully`);
   }
 
   updateAnimal(id: number, animal: Partial<Animal>): void {
