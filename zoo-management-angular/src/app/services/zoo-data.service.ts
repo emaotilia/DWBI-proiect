@@ -86,10 +86,6 @@ export interface Animal {
 export interface Mancare {
   id: number;
   nume: string;
-  tipMancare: string;
-  calorii: number;
-  pretPerKg: number;
-  furnizor: string;
 }
 
 export interface SeHranesteCu {
@@ -238,6 +234,13 @@ private transformAnimal(animal: any): Animal {
     data_nastere: animal.data_nasterii,
     specie_id: animal.id_specie,
     tarc_id: animal.id_tarc
+  }
+}
+
+private transformMancare(mancare: any): Mancare {
+  return {
+    id: mancare.id_mancare,
+    nume: mancare.continut
   }
 }
 
@@ -398,6 +401,7 @@ private transformAnimal(animal: any): Animal {
   private loadMancare(): void {
     this.http.get<Mancare[]>(`${this.API_BASE_URL}/mancare`)
       .pipe(
+        map(data => data.map(mancare => this.transformMancare(mancare))),
         catchError(error => {
           console.error('Error loading mancare:', error);
           return of([]);
