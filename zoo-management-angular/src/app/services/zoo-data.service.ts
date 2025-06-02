@@ -43,19 +43,13 @@ export interface TipBilet {
 export interface Eveniment {
   id: number;
   nume: string;
-  descriere: string;
-  data: string;
-  durata: number;
-  capacitateMaxima: number;
-  zooId: number;
 }
 
 export interface PlanificareEveniment {
   id: number;
   evenimentId: number;
-  angajatId: number;
-  rol: string;
-  dataAtribuirii: string;
+  zooId: number;
+  data: Date;
 }
 
 export interface Bilet {
@@ -70,10 +64,10 @@ export interface Bilet {
 
 export interface Tarc {
   id: number;
-  nume: string;
-  suprafata: number;
   tipHabitat: string;
-  capacitateMaxima: number;
+  lungime: number;
+  latime: number;
+  inaltime: number;
   zooId: number;
 }
 
@@ -212,6 +206,33 @@ private transformTipBilet(tip_bilet: any): TipBilet {
   }
 }
 
+private transformEveniment(eveniment: any): Eveniment {
+  return {
+    id: eveniment.id_eveniment,
+    nume: eveniment.denumire_eveniment
+  };
+}
+
+private transformPlanificareEveniment(planificare_eveniment: any): PlanificareEveniment {
+  return {
+    id: planificare_eveniment.id_eveniment,
+    evenimentId: planificare_eveniment.id_eveniment,
+    zooId: planificare_eveniment.id_zoo,
+    data: planificare_eveniment.data_eveniment,
+  }
+}
+
+private transformTarc(tarc: any): Tarc {
+  return {
+    id: tarc.id_tarc,
+    tipHabitat: tarc.tip_tarc,
+    lungime: tarc.lungime,
+    latime: tarc.latime,
+    inaltime: tarc.inaltime,
+    zooId: tarc.id_zoo,
+  }
+}
+
   constructor(private http: HttpClient) {
     this.loadAllData();
   }
@@ -226,6 +247,7 @@ private transformTipBilet(tip_bilet: any): TipBilet {
     this.loadTipBilete();
     this.loadEvenimente();
     this.loadPlanificariEvenimente();
+    this.loadTarcuri();
     this.loadAnimale();
     this.loadMancare();
     this.loadHranire();
@@ -307,6 +329,7 @@ private transformTipBilet(tip_bilet: any): TipBilet {
   private loadEvenimente(): void {
     this.http.get<Eveniment[]>(`${this.API_BASE_URL}/eveniment`)
       .pipe(
+        map(data => data.map(eveniment => this.transformEveniment(eveniment))),
         catchError(error => {
           console.error('Error loading evenimente:', error);
           return of([]);
@@ -318,12 +341,25 @@ private transformTipBilet(tip_bilet: any): TipBilet {
   private loadPlanificariEvenimente(): void {
     this.http.get<PlanificareEveniment[]>(`${this.API_BASE_URL}/planificare_eveniment`)
       .pipe(
+        map(data => data.map(planificare_eveniment => this.transformPlanificareEveniment(planificare_eveniment))),
         catchError(error => {
           console.error('Error loading planificare_eveniment:', error);
           return of([]);
         })
       )
       .subscribe(data => this.planificariEvenimenteSubject.next(data));
+  }
+
+  private loadTarcuri(): void {
+    this.http.get<Tarc[]>(`${this.API_BASE_URL}/tarc`)
+      .pipe(
+        map(data => data.map(tarc => this.transformTarc(tarc))),
+        catchError(error => {
+          console.error('Error loading animale:', error);
+          return of([]);
+        })
+      )
+      .subscribe(data => this.tarcuriSubject.next(data));
   }
 
   private loadAnimale(): void {
@@ -797,7 +833,7 @@ private transformTipBilet(tip_bilet: any): TipBilet {
     const newId = Math.max(...current.map(t => t.id)) + 1;
     const newTarc = { ...tarc, id: newId };
     this.tarcuriSubject.next([...current, newTarc]);
-    this.addETLLog('tarc', 'INSERT', 1, 'success', `Enclosure "${tarc.nume}" added successfully`);
+    this.addETLLog('tarc', 'INSERT', 1, 'success', `Enclosure added successfully`);
   }
 
   updateTarc(id: number, tarc: Partial<Tarc>): void {

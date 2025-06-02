@@ -132,13 +132,13 @@ export class OltpModuleComponent implements OnInit {
       case 'tipBilet':
         return ['ID', 'Nume'];
       case 'eveniment':
-        return ['ID', 'Nume', 'Descriere', 'Data', 'Durată', 'Capacitate Maximă', 'Zoo ID'];
+        return ['ID', 'Nume',];
       case 'planificareEveniment':
-        return ['ID', 'Eveniment ID', 'Angajat ID', 'Rol', 'Data Atribuirii'];
+        return ['ID', 'Eveniment ID', 'Zoo ID', 'Data Eveniment'];
       case 'bilet':
         return ['ID', 'Număr Bilet', 'Data Vânzării', 'Eveniment ID', 'Vizitator ID', 'Tip Bilet ID', 'Preț Final'];
       case 'tarc':
-        return ['ID', 'Nume', 'Suprafață', 'Tip Habitat', 'Capacitate Maximă', 'Zoo ID'];
+        return ['ID', 'Tip Habitat', 'Lungime', 'Latime', 'Inaltime', 'Zoo ID'];
       case 'specie':
         return ['ID', 'Nume', 'Nume Comun', 'Familia', 'Ordinul', 'Clasa', 'Status Conservare'];
       case 'animal':
@@ -207,18 +207,12 @@ export class OltpModuleComponent implements OnInit {
       case 'eveniment':
         return [
           { key: 'nume', label: 'Nume', type: 'text' },
-          { key: 'descriere', label: 'Descriere', type: 'textarea' },
-          { key: 'data', label: 'Data', type: 'date' },
-          { key: 'durata', label: 'Durată (minute)', type: 'number' },
-          { key: 'capacitateMaxima', label: 'Capacitate Maximă', type: 'number' },
-          { key: 'zooId', label: 'Zoo ID', type: 'number' }
         ];
       case 'planificareEveniment':
         return [
           { key: 'evenimentId', label: 'Eveniment ID', type: 'number' },
-          { key: 'angajatId', label: 'Angajat ID', type: 'number' },
-          { key: 'rol', label: 'Rol', type: 'text' },
-          { key: 'dataAtribuirii', label: 'Data Atribuirii', type: 'date' }
+          { key: 'zooId', label: 'Zoo ID', type: 'number' },
+          { key: 'data', label: 'Data Eveniment', type: 'date' }
         ];
       case 'bilet':
         return [
@@ -231,10 +225,10 @@ export class OltpModuleComponent implements OnInit {
         ];
       case 'tarc':
         return [
-          { key: 'nume', label: 'Nume', type: 'text' },
-          { key: 'suprafata', label: 'Suprafață (m²)', type: 'number' },
           { key: 'tipHabitat', label: 'Tip Habitat', type: 'text' },
-          { key: 'capacitateMaxima', label: 'Capacitate Maximă', type: 'number' },
+          { key: 'lungime', label: 'Lungime', type: 'number' },
+          { key: 'latime', label: 'latime', type: 'number' },
+          { key: 'inaltime', label: 'inaltime', type: 'number' },
           { key: 'zooId', label: 'Zoo ID', type: 'number' }
         ];
       case 'specie':

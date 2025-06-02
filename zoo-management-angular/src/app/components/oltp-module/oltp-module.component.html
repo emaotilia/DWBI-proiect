@@ -114,20 +114,14 @@
               <ng-container *ngSwitchCase="'eveniment'">
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.id }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.nume }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.descriere }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.data | date:'dd/MM/yyyy' }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.durata }} min</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.capacitateMaxima }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.zoo_id }}</td>
               </ng-container>
 
               <!-- PlanificareEveniment table columns -->
               <ng-container *ngSwitchCase="'planificareEveniment'">
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.id }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.evenimentId }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.angajatId }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.rol }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.dataAtribuirii | date:'dd/MM/yyyy' }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.zooId }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.data | date:'dd/MM/yyyy' }}</td>
               </ng-container>
 
               <!-- Bilet table columns -->
@@ -144,10 +138,10 @@
               <!-- Tarc table columns -->
               <ng-container *ngSwitchCase="'tarc'">
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.id }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.nume }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.suprafata | number }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.tipHabitat }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.capacitateMaxima }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.lungime | number }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.latime | number }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.inaltime | number }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.zooId }}</td>
               </ng-container>
 
