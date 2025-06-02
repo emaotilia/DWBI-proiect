@@ -90,10 +90,9 @@ export interface Mancare {
 
 export interface SeHranesteCu {
   id: number;
-  animalId: number;
+  specieId: number;
   mancareId: number;
   cantitateZilnica: number;
-  oraHranirii: string;
 }
 
 export interface ETLLog {
@@ -241,6 +240,15 @@ private transformMancare(mancare: any): Mancare {
   return {
     id: mancare.id_mancare,
     nume: mancare.continut
+  }
+}
+
+private transformSeHranesteCu(se_hraneste_cu: any): SeHranesteCu {
+  return {
+    id: se_hraneste_cu.id_specie,
+    specieId: se_hraneste_cu.id_specie,
+    mancareId: se_hraneste_cu.id_mancare,
+    cantitateZilnica: se_hraneste_cu.cantitate_medie_zilnica
   }
 }
 
@@ -413,6 +421,7 @@ private transformMancare(mancare: any): Mancare {
   private loadHranire(): void {
     this.http.get<SeHranesteCu[]>(`${this.API_BASE_URL}/se_hraneste_cu`)
       .pipe(
+        map(data => data.map(se_hraneste_cu => this.transformSeHranesteCu(se_hraneste_cu))),
         catchError(error => {
           console.error('Error loading se_hraneste_cu:', error);
           return of([]);
