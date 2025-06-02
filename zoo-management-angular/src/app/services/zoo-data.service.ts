@@ -73,12 +73,7 @@ export interface Tarc {
 
 export interface Specie {
   id: number;
-  nume: string;
-  numeComun: string;
-  familia: string;
-  ordinul: string;
-  clasa: string;
-  statusConservare: string;
+  denumire: string;
 }
 
 export interface Animal {
@@ -233,6 +228,13 @@ private transformTarc(tarc: any): Tarc {
   }
 }
 
+private transformSpecie(specie: any): Specie {
+  return {
+    id: specie.id_specie,
+    denumire: specie.denumire
+  }
+}
+
   constructor(private http: HttpClient) {
     this.loadAllData();
   }
@@ -248,6 +250,7 @@ private transformTarc(tarc: any): Tarc {
     this.loadEvenimente();
     this.loadPlanificariEvenimente();
     this.loadTarcuri();
+    this.loadSpecii();
     this.loadAnimale();
     this.loadMancare();
     this.loadHranire();
@@ -355,11 +358,23 @@ private transformTarc(tarc: any): Tarc {
       .pipe(
         map(data => data.map(tarc => this.transformTarc(tarc))),
         catchError(error => {
-          console.error('Error loading animale:', error);
+          console.error('Error loading tarcuri:', error);
           return of([]);
         })
       )
       .subscribe(data => this.tarcuriSubject.next(data));
+  }
+
+  private loadSpecii(): void {
+    this.http.get<Specie[]>(`${this.API_BASE_URL}/specie`)
+      .pipe(
+        map(data => data.map(specie => this.transformSpecie(specie))),
+        catchError(error => {
+          console.error('Error loading specii:', error);
+          return of([]);
+        })
+      )
+      .subscribe(data => this.speciiSubject.next(data));
   }
 
   private loadAnimale(): void {
@@ -859,7 +874,7 @@ private transformTarc(tarc: any): Tarc {
     const newId = Math.max(...current.map(s => s.id)) + 1;
     const newSpecie = { ...specie, id: newId };
     this.speciiSubject.next([...current, newSpecie]);
-    this.addETLLog('specie', 'INSERT', 1, 'success', `Species "${specie.numeComun}" added successfully`);
+    this.addETLLog('specie', 'INSERT', 1, 'success', `Species "${specie.denumire}" added successfully`);
   }
 
   updateSpecie(id: number, specie: Partial<Specie>): void {
