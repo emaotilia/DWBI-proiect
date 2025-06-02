@@ -13,11 +13,9 @@ export interface Zoo {
 export interface Angajat {
   id: number;
   nume: string;
-  prenume: string;
   functie: string;
   salariu: number;
-  data_angajare: string;
-  zoo_id: number;
+  id_zoo: number;
 }
 
 export interface Studiu {
@@ -185,6 +183,16 @@ export class ZooDataService {
     };
   }
 
+private transformAngajat(angajat: any): Angajat {
+ return {
+  id: angajat.id_angajat,
+  nume: angajat.nume,
+  functie: angajat.functie,
+  salariu: angajat.salariu,
+  id_zoo: angajat.id_zoo
+ };
+}
+
   constructor(private http: HttpClient) {
     this.loadAllData();
   }
@@ -220,6 +228,7 @@ export class ZooDataService {
   private loadAngajati(): void {
     this.http.get<Angajat[]>(`${this.API_BASE_URL}/angajat`)
       .pipe(
+        map(data => data.map(angajat => this.transformAngajat(angajat))),
         catchError(error => {
           console.error('Error loading angajati:', error);
           return of([]);
@@ -390,18 +399,25 @@ export class ZooDataService {
   }
 
   // Angajat CRUD operations - with real backend integration
-  addAngajat(angajat: Omit<Angajat, 'id'>): void {
-    this.http.post(`${this.API_BASE_URL}/angajat`, angajat)
+  addAngajat(angajat: Angajat): void {
+    const backendAngajat = {
+      id_angajat: angajat.id,
+      nume: angajat.nume,
+      functie: angajat.functie,
+      salariu: angajat.salariu,
+      id_zoo: angajat.id_zoo
+    }
+    this.http.post(`${this.API_BASE_URL}/angajat`, backendAngajat)
       .pipe(
         catchError(error => {
           console.error('Error adding angajat:', error);
-          this.addETLLog('angajat', 'INSERT', 0, 'error', `Failed to add employee "${angajat.nume} ${angajat.prenume}": ${error.message}`);
+          this.addETLLog('angajat', 'INSERT', 0, 'error', `Failed to add employee "${angajat.nume} ": ${error.message}`);
           return of(null);
         })
       )
       .subscribe(response => {
         if (response) {
-          this.addETLLog('angajat', 'INSERT', 1, 'success', `Employee "${angajat.nume} ${angajat.prenume}" added successfully`);
+          this.addETLLog('angajat', 'INSERT', 1, 'success', `Employee "${angajat.nume} " added successfully`);
           this.loadAngajati();
         }
       });
