@@ -54,13 +54,16 @@ export interface PlanificareEveniment {
 
 export interface Bilet {
   id: number;
-  numarBilet: string;
-  dataVanzarii: string;
   evenimentId: number;
+  zooId: number;
+  angajatId: number;
   vizitatorId: number;
   tipBiletId: number;
-  pretFinal: number;
+  pret: number;
+  dataVanzarii: string;
 }
+
+
 
 export interface Tarc {
   id: number;
@@ -209,6 +212,19 @@ private transformPlanificareEveniment(planificare_eveniment: any): PlanificareEv
   }
 }
 
+private transformBilet(bilet: any): Bilet {
+  return {
+    id: bilet.id_bilet,
+    evenimentId: bilet.id_eveniment,
+    zooId: bilet.id_zoo,
+    angajatId: bilet.id_angajat,
+    vizitatorId: bilet.id_vizitator,
+    tipBiletId: bilet.id_tip_bilet,
+    pret: bilet.pret,
+    dataVanzarii: bilet.data_vanzarii,
+  }
+}
+
 private transformTarc(tarc: any): Tarc {
   return {
     id: tarc.id_tarc,
@@ -266,6 +282,7 @@ private transformSeHranesteCu(se_hraneste_cu: any): SeHranesteCu {
     this.loadTipBilete();
     this.loadEvenimente();
     this.loadPlanificariEvenimente();
+    this.loadBilete();
     this.loadTarcuri();
     this.loadSpecii();
     this.loadAnimale();
@@ -368,6 +385,18 @@ private transformSeHranesteCu(se_hraneste_cu: any): SeHranesteCu {
         })
       )
       .subscribe(data => this.planificariEvenimenteSubject.next(data));
+  }
+
+  private loadBilete(): void {
+    this.http.get<PlanificareEveniment[]>(`${this.API_BASE_URL}/bilet`)
+      .pipe(
+        map(data => data.map(bilet => this.transformBilet(bilet))),
+        catchError(error => {
+          console.error('Error loading bilet:', error);
+          return of([]);
+        })
+      )
+      .subscribe(data => this.bileteSubject.next(data));
   }
 
   private loadTarcuri(): void {
@@ -842,7 +871,7 @@ private transformSeHranesteCu(se_hraneste_cu: any): SeHranesteCu {
     const newId = Math.max(...current.map(b => b.id)) + 1;
     const newBilet = { ...bilet, id: newId };
     this.bileteSubject.next([...current, newBilet]);
-    this.addETLLog('bilet', 'INSERT', 1, 'success', `Ticket "${bilet.numarBilet}" added successfully`);
+    this.addETLLog('bilet', 'INSERT', 1, 'success', `Ticket added successfully`);
   }
 
   updateBilet(id: number, bilet: Partial<Bilet>): void {

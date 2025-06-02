@@ -136,7 +136,7 @@ export class OltpModuleComponent implements OnInit {
       case 'planificareEveniment':
         return ['ID', 'Eveniment ID', 'Zoo ID', 'Data Eveniment'];
       case 'bilet':
-        return ['ID', 'Număr Bilet', 'Data Vânzării', 'Eveniment ID', 'Vizitator ID', 'Tip Bilet ID', 'Preț Final'];
+        return ['ID', 'Data Vânzării', 'Eveniment ID', 'Vizitator ID', 'Tip Bilet ID', 'Preț Final'];
       case 'tarc':
         return ['ID', 'Tip Habitat', 'Lungime', 'Latime', 'Inaltime', 'Zoo ID'];
       case 'specie':
@@ -216,12 +216,11 @@ export class OltpModuleComponent implements OnInit {
         ];
       case 'bilet':
         return [
-          { key: 'numarBilet', label: 'Număr Bilet', type: 'text' },
           { key: 'dataVanzarii', label: 'Data Vânzării', type: 'date' },
           { key: 'evenimentId', label: 'Eveniment ID', type: 'number' },
           { key: 'vizitatorId', label: 'Vizitator ID', type: 'number' },
           { key: 'tipBiletId', label: 'Tip Bilet ID', type: 'number' },
-          { key: 'pretFinal', label: 'Preț Final (RON)', type: 'number' }
+          { key: 'pret', label: 'Preț Final (RON)', type: 'number' }
         ];
       case 'tarc':
         return [
