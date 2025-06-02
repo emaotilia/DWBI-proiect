@@ -21,9 +21,6 @@ export interface Angajat {
 export interface Studiu {
   id: number;
   nume: string;
-  institutie: string;
-  anAbsolvire: number;
-  tipStudiu: string; // 'licenta' | 'master' | 'doctorat'
 }
 
 export interface Calificare {
@@ -193,6 +190,13 @@ private transformAngajat(angajat: any): Angajat {
  };
 }
 
+private transformStudiu(studiu: any): Studiu {
+  return {
+    id: studiu.id_studiu,
+    nume: studiu.studiu
+  };
+}
+
   constructor(private http: HttpClient) {
     this.loadAllData();
   }
@@ -240,6 +244,7 @@ private transformAngajat(angajat: any): Angajat {
   private loadStudii(): void {
     this.http.get<Studiu[]>(`${this.API_BASE_URL}/studiu`)
       .pipe(
+        map(data => data.map(studiu => this.transformStudiu(studiu))),
         catchError(error => {
           console.error('Error loading studii:', error);
           return of([]);

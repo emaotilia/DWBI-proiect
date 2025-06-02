@@ -124,7 +124,7 @@ export class OltpModuleComponent implements OnInit {
       case 'angajat':
         return ['ID', 'Nume', 'Functie', 'Salariu',  'Zoo ID'];
       case 'studiu':
-        return ['ID', 'Nume', 'Instituție', 'An Absolvire', 'Tip Studiu'];
+        return ['ID', 'Nume'];
       case 'calificare':
         return ['ID', 'Angajat ID', 'Studiu ID', 'Data Obținerii', 'Notă'];
       case 'vizitator':
@@ -178,9 +178,6 @@ export class OltpModuleComponent implements OnInit {
       case 'studiu':
         return [
           { key: 'nume', label: 'Nume', type: 'text' },
-          { key: 'institutie', label: 'Instituție', type: 'text' },
-          { key: 'anAbsolvire', label: 'An Absolvire', type: 'number' },
-          { key: 'tipStudiu', label: 'Tip Studiu', type: 'text' }
         ];
       case 'calificare':
         return [
