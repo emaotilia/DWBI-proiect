@@ -37,10 +37,7 @@ export interface Vizitator {
 
 export interface TipBilet {
   id: number;
-  nume: string;
-  pret: number;
-  descriere: string;
-  discount: number;
+  nume_tip: string;
 }
 
 export interface Eveniment {
@@ -208,6 +205,13 @@ private transformVizitator(vizitator: any): Vizitator {
   }
 } 
 
+private transformTipBilet(tip_bilet: any): TipBilet {
+  return {
+    id: tip_bilet.id_tip_bilet,
+    nume_tip: tip_bilet.nume_tip,
+  }
+}
+
   constructor(private http: HttpClient) {
     this.loadAllData();
   }
@@ -291,6 +295,7 @@ private transformVizitator(vizitator: any): Vizitator {
   private loadTipBilete(): void {
     this.http.get<TipBilet[]>(`${this.API_BASE_URL}/tip_bilet`)
       .pipe(
+        map(data => data.map(tip_bilet => this.transformTipBilet(tip_bilet))),
         catchError(error => {
           console.error('Error loading tip_bilet:', error);
           return of([]);
@@ -688,7 +693,7 @@ private transformVizitator(vizitator: any): Vizitator {
     const newId = Math.max(...current.map(t => t.id)) + 1;
     const newTipBilet = { ...tipBilet, id: newId };
     this.tipBileteSubject.next([...current, newTipBilet]);
-    this.addETLLog('tip_bilet', 'INSERT', 1, 'success', `Ticket type "${tipBilet.nume}" added successfully`);
+    this.addETLLog('tip_bilet', 'INSERT', 1, 'success', `Ticket type "${tipBilet.nume_tip}" added successfully`);
   }
 
   updateTipBilet(id: number, tipBilet: Partial<TipBilet>): void {

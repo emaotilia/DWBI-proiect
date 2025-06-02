@@ -130,7 +130,7 @@ export class OltpModuleComponent implements OnInit {
       case 'vizitator':
         return ['ID', 'Nume', 'Grup Varsta'];
       case 'tipBilet':
-        return ['ID', 'Nume', 'Preț', 'Descriere', 'Discount'];
+        return ['ID', 'Nume'];
       case 'eveniment':
         return ['ID', 'Nume', 'Descriere', 'Data', 'Durată', 'Capacitate Maximă', 'Zoo ID'];
       case 'planificareEveniment':
@@ -202,10 +202,7 @@ export class OltpModuleComponent implements OnInit {
         ];
       case 'tipBilet':
         return [
-          { key: 'nume', label: 'Nume', type: 'text' },
-          { key: 'pret', label: 'Preț (RON)', type: 'number' },
-          { key: 'descriere', label: 'Descriere', type: 'textarea' },
-          { key: 'discount', label: 'Discount (%)', type: 'number' }
+          { key: 'nume_tip', label: 'Nume', type: 'text' },
         ];
       case 'eveniment':
         return [
